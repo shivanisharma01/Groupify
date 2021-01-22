@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <title>CSCI5308 - Group Formation Tool - Questions</title>
+
+    <!-- Normalize.css by Nicolas Gallagher, used from https://necolas.github.io/normalize.css/ 
+	Necessary to reset some default browser styles for consistent appearance across browsers. -->
+    <link th:href="@{/styles/cssandjs/normalize.css}" rel="stylesheet" />
+
+    <!-- This file includes all default styles for this application. -->
+    <link th:href="@{/styles/cssandjs/main.css}" rel="stylesheet" />
+</head>
+
+<body class="bodyGridContainer">
+    <header class="bodyGridRow headerGridContainer">
+        <h1>CSCI5308 Group Formation Tool</h1>
+        <div class="bodyGridRow userProfileGridContainer" sec:authorize="isAuthenticated()">
+            <form th:action="@{/}">
+                <input type="submit" value="Home" />
+            </form>
+            <form class="userProfileGridCol4" th:action="@{/logout}" method="post">
+                <input type="submit" value="Sign Out" />
+            </form>
+        </div>
+    </header>
+    <main class="bodyGridRow mainGridContainer">
+        <div th:if="${surveyDetails!=null and !surveyDetails.empty}" class="mainGridCentreCard">
+            <div>Question Added to the Survey</div>
+            <br>
+            <br>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Question ID</th>
+                        <th>Question Text</th>
+                        <th>Question Title</th>
+                        <th>Question Type ID</th>
+                        <th>Creation Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="surveyDetail : ${surveyDetails}">
+                        <td><span th:text="${surveyDetail.questionId}"> Question Id </span></td>
+                        <td><span th:text="${surveyDetail.questionText}"> Question
+								Text </span></td>
+                        <td><span th:text="${surveyDetail.questionTitle}">
+								Question Title </span></td>
+                        <td><span th:text="${surveyDetail.questionTypeID}">
+								Question Type ID </span></td>
+                        <td><span th:text="${surveyDetail.creationDate}"> Creation
+								Date </span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+
+</html>

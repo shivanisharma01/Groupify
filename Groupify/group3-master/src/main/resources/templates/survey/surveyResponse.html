@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <title>CSCI5308 - Group Formation Tool - Survey</title>
+
+    <!-- Normalize.css by Nicolas Gallagher, used from https://necolas.github.io/normalize.css/ 
+	Necessary to reset some default browser styles for consistent appearance across browsers. -->
+    <link th:href="@{/styles/cssandjs/normalize.css}" rel="stylesheet" />
+
+    <!-- This file includes all default styles for this application. -->
+    <link th:href="@{/styles/cssandjs/main.css}" rel="stylesheet" />
+
+</head>
+
+<body class="bodyGridContainer">
+    <header class="bodyGridRow headerGridContainer">
+        <h1>CSCI5308 Group Formation Tool</h1>
+        <div class="bodyGridRow userProfileGridContainer" sec:authorize="isAuthenticated()">
+            <form th:action="@{/}">
+                <input type="submit" value="Home" />
+            </form>
+            <form class="userProfileGridCol4" th:action="@{/logout}" method="post">
+                <input type="submit" value="Sign Out" />
+            </form>
+        </div>
+    </header>
+    <main class="bodyGridRow mainGridContainer">
+        <aside class="mainGridRow welcomeInfoBox">
+            <h2>Survey</h2>
+        </aside>
+        <div class="mainGridCentreCard">
+            <form th:action="@{/survey/submitResponse}" th:object="${surveyResponse}" method="post">
+                <input type="hidden" name="courseID" th:field="${surveyResponse.courseId}">
+                <input type="hidden" name="userID" th:field="${surveyResponse.userId}">
+                <div th:each="surveyAnswer, qstat : *{answers}">
+                    <input type="hidden" name="questionText" th:field="${surveyResponse.answers[__${qstat.index}__].question.questionText}">
+                    <input type="hidden" name="questionID" th:field="${surveyResponse.answers[__${qstat.index}__].question.questionID}">
+                    <input type="hidden" name="questionTypeID" th:field="${surveyResponse.answers[__${qstat.index}__].question.questionTypeID}">
+                    <p><span th:text="${qstat.index + 1}"> Question No </span>.
+                        <span th:text="${surveyAnswer.question.questionText}"> Question Text </span></p>
+                    <div th:if="${surveyAnswer.question.questionTypeID == 1}">
+                        <div>
+                            <label> <input type="number" th:field="*{answers[__${qstat.index}__].singleAnswer}" required>
+                            </label>
+                        </div>
+                    </div>
+                    <div th:if="${surveyAnswer.question.questionTypeID == 4}">
+                        <div class="textarea">
+                            <label> <input type="text" th:field="*{answers[__${qstat.index}__].singleAnswer}" required>
+                            </label>
+                        </div>
+                    </div>
+                    <div th:if="${!surveyAnswer.question.options.empty}">
+                        <div th:if="${surveyAnswer.question.questionTypeID == 2}">
+                            <select th:field="*{answers[__${qstat.index}__].singleAnswer}" required>
+                                <option selected="selected" value="defaultValue" >Select One</option>
+                                <option th:each="element : ${surveyAnswer.question.options}" th:text="${element.value}" th:value="${element.value}" ></option>
+                            </select>
+                        </div>
+                        <div th:if="${surveyAnswer.question.questionTypeID == 3}">
+                            <div>
+                                <table class="table">
+                                    <tbody>
+                                        <tr th:each="element : ${surveyAnswer.question.options}">
+                                            <td>
+                                                <div>
+                                                    <label> <input type="checkbox" name="multipleCheckbox" th:text="${element.value}" th:value="${element.value}"  th:field="*{answers[__${qstat.index}__].singleAnswer}" >
+                                                
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+                </div>
+                <div>
+                    <a th:href="@{/}">Cancel</a>
+                    <input type="submit" >
+                </div>
+
+            </form>
+        </div>
+    </main>
+
+
+</body>
+
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+<title>CSCI5308 - Group Formation Tool - Questions</title>
+
+<!-- Normalize.css by Nicolas Gallagher, used from https://necolas.github.io/normalize.css/ 
+	Necessary to reset some default browser styles for consistent appearance across browsers. -->
+<link th:href="@{/styles/cssandjs/normalize.css}" rel="stylesheet" />
+
+<!-- This file includes all default styles for this application. -->
+<link th:href="@{/styles/cssandjs/main.css}" rel="stylesheet" />
+</head>
+
+<body class="bodyGridContainer">
+	<header class="bodyGridRow headerGridContainer">
+		<h1>CSCI5308 Group Formation Tool</h1>
+	</header>
+	<main>
+		<aside class="mainGridRow welcomeInfoBox">
+			<h2>Question</h2>
+		</aside>
+		<div class="mainGridCentreCard">
+			<div align=center th:if="${question!=null}">
+				<span th:text="${question.questionText}"> Question Text </span>
+				<div th:if="${question.questionTypeID == 1}">
+					<div>
+						<label> <input type="text" name="number">
+						</label>
+					</div>
+				</div>
+				<div th:if="${question.questionTypeID == 4}">
+					<div class="textarea">
+						<label> <textarea name="answer"></textarea>
+						</label>
+					</div>
+				</div>
+				<div th:if="${!mapOfOptions.empty}">
+					<div th:if="${question.questionTypeID == 2}">
+						<table class="table">
+							<tbody>
+								<tr th:each="element : ${mapOfOptions}">
+									<td>
+										<div>
+											<label> <input type="radio" name="option">
+											</label> <span th:text="${element.value}"></span>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div th:if="${question.questionTypeID == 3}">
+						<table class="table">
+							<tbody>
+								<tr th:each="element : ${mapOfOptions}">
+									<td>
+										<div>
+											<label> <input type="checkbox" name="options">
+											</label> <span th:text="${element.value}"></span>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<br> <a
+					th:href="@{/createSurvey/{courseID}(courseID = ${courseID})}"><button>View
+						Survey Question List</button></a>
+			</div>
+		</div>
+	</main>
+</body>
+
+</html>

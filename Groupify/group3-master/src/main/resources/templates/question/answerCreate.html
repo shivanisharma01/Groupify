@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+<title>CSCI5308 - Group Formation Tool -Create Answer</title>
+
+<!-- Normalize.css by Nicolas Gallagher, used from https://necolas.github.io/normalize.css/ 
+	Necessary to reset some default browser styles for consistent appearance across browsers. -->
+<link th:href="@{/styles/cssandjs/normalize.css}" rel="stylesheet" />
+
+<!-- This file includes all default styles for this application. -->
+<link th:href="@{/styles/cssandjs/main.css}" rel="stylesheet" />
+</head>
+
+<body class="bodyGridContainer">
+	<header class="bodyGridRow headerGridContainer">
+		<h1>CSCI5308 Group Formation Tool</h1>
+	</header>
+	<main class="bodyGridRow mainGridContainer">
+		<aside class="mainGridRow welcomeInfoBox">
+			<h2>Answer Editor</h2>
+		</aside>
+		<!--Add Progress Bar-->
+		<div class="mainGridCentreCard">
+			<p>
+				<b>Question: </b><span th:text="${question.questionText}"></span>
+			</p>
+			<form th:action="@{/question/answerCreate}" th:object="${question}"
+				method="post">
+				<div id="optionsDIV">
+					<br>
+					<table id="optTable">
+						<tr>
+							<td>Display Text</td>
+							<td>Stored As</td>
+						</tr>
+						<tr th:each="option,itemStat : *{tOption}">
+							<td><input size=25 type="text" required
+								th:field="*{tOption[__${itemStat.index}__].optionText}" /></td>
+							<td><input size=25 type="text" required
+								th:field="*{tOption[__${itemStat.index}__].optionID}" /></td>
+						</tr>
+					</table>
+					<a
+						th:href="@{'/question/answerCreate?quesTitle=' + ${question.questionTitle}+'&quesType='+ ${question.questionTypeID}+'&instructorID='+ ${question.instructorID}+'&quesText='+ ${question.questionText}+'&optList='+ ${#arrays.length(question.tOption)}}">Add
+						More</a>
+				</div>
+				<div>
+					<input id="id1" th:field="*{questionText}" type="hidden" /> <input
+						id="id2" th:field="*{questionTitle}" type="hidden" /> <input
+						id="id3" th:field="*{questionTypeID}" type="hidden" /> <input
+						id="id4" th:field="*{instructorID}" type="hidden" /> <a
+						th:href="@{/question/{instructorID}/{sortFlag}(instructorID = ${question.instructorID}, sortFlag = 1 )}">Cancel</a>
+					<button type="submit">Save</button>
+				</div>
+			</form>
+		</div>
+	</main>
+</body>
+</html>

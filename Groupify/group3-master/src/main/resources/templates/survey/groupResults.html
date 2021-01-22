@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <title>CSCI5308 - Group Formation Tool - Questions</title>
+
+    <!-- Normalize.css by Nicolas Gallagher, used from https://necolas.github.io/normalize.css/ 
+	Necessary to reset some default browser styles for consistent appearance across browsers. -->
+    <link th:href="@{/styles/cssandjs/normalize.css}" rel="stylesheet" />
+
+    <!-- This file includes all default styles for this application. -->
+    <link th:href="@{/styles/cssandjs/main.css}" rel="stylesheet" />
+    <style type="text/css">
+        button {
+            width: max-content;
+        }
+        
+        a {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <body class="bodyGridContainer">
+        <header class="bodyGridRow headerGridContainer">
+            <h1>CSCI5308 Group Formation Tool</h1>
+            <div class="bodyGridRow userProfileGridContainer" sec:authorize="isAuthenticated()">
+                <form th:action="@{/}">
+                    <input type="submit" value="Home" />
+                </form>
+                <form class="userProfileGridCol4" th:action="@{/logout}" method="post">
+                    <input type="submit" value="Sign Out" />
+                </form>
+            </div>
+        </header>
+        <main class="bodyGridRow">
+            <aside class="mainGridRow welcomeInfoBox">
+                <h2>Group Formation Policy</h2>
+            </aside>
+            <div style="margin-left: 2%">
+                <table>
+                    <th th:text="'Group Size: '+${groupSize}" style="font-style: normal; font-weight: bold;">Group Number</th>
+                    <tr>
+                        <th>Question ID</th>
+                        <th>Question</th>
+                        <th>Group by</th>
+                        <th>Compare Value</th>
+                    </tr>
+                    <div th:each="surveyRule : ${surveyRulesObj}" style="display: none">
+                        <tr>
+                            <td th:text="${surveyRule.questionId}">Banner ID</td>
+                            <td th:text="${surveyRule.questionText}">Banner ID</td>
+                            <td th:text="${surveyRule.groupBy}">Banner ID</td>
+                            <td th:if="${surveyRule.compareValue == -1}">None</td>
+
+                                    <td th:if="${surveyRule.compareValue != -1}" th:text="${surveyRule.compareValue}">Banner ID</td>
+                        </tr>
+                    </div>
+                </table>
+            </div>
+            <aside class="mainGridRow welcomeInfoBox">
+                <h2>Generated Groups</h2>
+            </aside>
+            <div style="margin-left: 2%">
+                <table>
+                    <div th:each="group : ${groups}" style="display: none">
+                        <tr>
+                            <th th:text="'Group ID: '+${group.key}" style="font-style: normal; font-weight: bold;">Group Number</th>
+                        </tr>
+                        <tr>
+                            <th>Banner ID</th>
+                            <th>Last Name</th>
+                            <th>First Name</th>
+                            <th>Student Response</th>
+                        </tr>
+                        <div th:each="student,iter:${group.value}" style="display: none">
+                            <tr>
+                                <td th:text="${student.key.bannerID}">Banner ID</td>
+                                <td th:text="${student.key.lastName}">Last Name</td>
+                                <td th:text="${student.key.firstName}">First Name</td>
+                                <div th:each="response,iter:${student.value}" style="display: none">
+                                    <td th:text="${response}">
+                                        <td>
+                                </div>
+                                <tr>
+                        </div>
+                    </div>
+                </table>
+            </div>
+    </body>
+
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+<title>CSCI5308 - Group Formation Tool - Questions</title>
+
+<!-- Normalize.css by Nicolas Gallagher, used from https://necolas.github.io/normalize.css/ 
+	Necessary to reset some default browser styles for consistent appearance across browsers. -->
+<link th:href="@{/styles/cssandjs/normalize.css}" rel="stylesheet" />
+
+<!-- This file includes all default styles for this application. -->
+<link th:href="@{/styles/cssandjs/main.css}" rel="stylesheet" />
+</head>
+
+<body class="bodyGridContainer">
+	<header class="bodyGridRow headerGridContainer">
+		<h1>CSCI5308 Group Formation Tool</h1>
+	</header>
+	<main>
+		<aside class="mainGridRow welcomeInfoBox">
+			<h2>Survey Creation Tool</h2>
+		</aside>
+		<div class="mainGridCentreCard">
+		<div>
+		<form action="#" th:action="@{/createSurvey/{courseID}/{instructorID}(courseID = ${courseID}, instructorID = ${instructorID})}" method="post">
+			<label>Question Title:</label>
+			<input type="text" name= "questionTitle" required> <br/>
+			<button type="submit">Search Question</button>
+		</form>
+		</div>
+		<br>
+		<br>
+		<div th:if="${questionList!=null and !questionList.empty}">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Question ID</th>
+						<th>Question Text</th>
+						<th>Question Title</th>
+						<th>Question Type ID</th>
+						<th>Creation Date</th>
+						<th>Add Question</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="question : ${questionList}">
+						<td><a
+							th:href="@{/loadSurveyQuestion/{questionID}/{courseID}(questionID = ${question.questionID}, courseID = ${courseID})}"><span
+								th:text="${question.questionID}"> Question Id </span></a></td>
+						<td><span th:text="${question.questionText}"> Question
+								Text </span></td>
+						<td><span th:text="${question.questionTitle}">
+								Question Title </span></td>
+						<td><span th:text="${question.questionTypeID}">
+								Question Type ID </span></td>
+						<td><span th:text="${question.creationDate}"> Creation
+								Date </span></td>
+						<td><a
+							th:href="@{/createSurvey/addQuestionToSurvey/{courseID}/{questionID}/{instructorID}(courseID = ${courseID}, instructorID = ${instructorID}, questionID = ${question.questionID})}"><button>Add To Survey</button></a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<br>
+		<br>
+		<div th:if="${surveyDetails!=null and !surveyDetails.empty}">
+			<div>Question Added to the Survey</div>
+			<br>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Question ID</th>
+						<th>Question Text</th>
+						<th>Question Title</th>
+						<th>Question Type ID</th>
+						<th>Creation Date</th>
+						<th>Delete Question</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="surveyDetail : ${surveyDetails}">
+						<td><a
+							th:href="@{/loadSurveyQuestion/{questionID}/{courseID}(questionID = ${surveyDetail.questionId}, courseID = ${courseID})}"><span
+								th:text="${surveyDetail.questionId}"> Question Id </span></a></td>
+						<td><span th:text="${surveyDetail.questionText}"> Question
+								Text </span></td>
+						<td><span th:text="${surveyDetail.questionTitle}">
+								Question Title </span></td>
+						<td><span th:text="${surveyDetail.questionTypeID}">
+								Question Type ID </span></td>
+						<td><span th:text="${surveyDetail.creationDate}"> Creation
+								Date </span></td>
+						<td><a
+							th:href="@{/createSurvey/removeQuestionFromSurvey/{courseID}/{questionID}/{instructorID}(courseID = ${courseID}, instructorID = ${instructorID}, questionID = ${surveyDetail.questionId})}"><button>Delete From Survey</button></a></td>
+					</tr>
+				</tbody>
+			</table>
+			<a th:href="@{/}"><button>Save and Edit Later</button></a>
+		</div>
+		</div>
+	</main>
+</body>
+
+</html>

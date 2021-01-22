@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <title>CSCI5308 - Group Formation Tool - Questions</title>
+
+    <!-- Normalize.css by Nicolas Gallagher, used from https://necolas.github.io/normalize.css/ 
+	Necessary to reset some default browser styles for consistent appearance across browsers. -->
+    <link th:href="@{/styles/cssandjs/normalize.css}" rel="stylesheet" />
+
+    <!-- This file includes all default styles for this application. -->
+    <link th:href="@{/styles/cssandjs/main.css}" rel="stylesheet" />
+    <style type="text/css">
+        table {
+            border: 1px solid black;
+            text-align: left;
+        }
+        
+        td {
+            border: 1px solid black;
+        }
+        
+        th {
+            border: 1px solid black;
+        }
+        
+        button {
+            width: max-content;
+        }
+        
+        a {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body class="bodyGridContainer">
+    <header class="bodyGridRow headerGridContainer">
+        <h1>CSCI5308 Group Formation Tool</h1>
+    </header>
+    <main class="bodyGridRow">
+        <aside class="mainGridRow welcomeInfoBox">
+            <h2>Group Formation Algorithm</h2>
+            <div class="bodyGridRow userProfileGridContainer" sec:authorize="isAuthenticated()">
+                <form th:action="@{/}">
+                    <input type="submit" value="Home" />
+                </form>
+                <form class="userProfileGridCol4" th:action="@{/logout}" method="post">
+                    <input type="submit" value="Sign Out" />
+                </form>
+            </div>
+        </aside>
+        <div style="margin-left: 10%">
+            <form th:action="@{/groupformation/algorithm/save}" method="post" th:object="${groupFormationForm}">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Question Text</th>
+                            <th>Question Type ID</th>
+                            <th>Group by</th>
+                            <th>Value to compare</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="*{surveyDetails.empty}">
+                            <td colspan="2">No questions Available</td>
+                        </tr>
+                        <tr th:each="question, iterator : *{surveyDetails}">
+                            <td><span th:text="${question.questionText}">
+									Question Text </span> <input type="hidden" th:field="*{surveyDetails[__${iterator.index}__].questionText}" /></td>
+                            <td><span th:text="${question.questionTypeID}">
+									Question Text </span> <input type="hidden" th:field="*{surveyDetails[__${iterator.index}__].questionTypeID}" />
+                                <input type="hidden" th:field="*{surveyDetails[__${iterator.index}__].courseId}" />
+                                <input type="hidden" th:field="*{surveyDetails[__${iterator.index}__].questionId}" />
+
+                            </td>
+                            <td th:if="${question.questionTypeID == 2 || question.questionTypeID == 3 || question.questionTypeID == 4} ">
+                                <select th:field="*{surveyDetails[__${iterator.index}__].groupBy}">
+									<option value="none">Not required</option>
+									<option value="similar">similar</option>
+									<option value="dissimilar">dissimilar</option>
+							</select>
+                            </td>
+
+                            <td th:if="${question.questionTypeID == 2 || question.questionTypeID == 3 || question.questionTypeID == 4} "><span>-</span>
+                            </td>
+                            <td th:if="${question.questionTypeID == 1 }"><select th:field="*{surveyDetails[__${iterator.index}__].groupBy}">
+									<option value="none">Not required</option>
+									<option value="similar">similar</option>
+									<option value="dissimilar">dissimilar</option>
+									<option value="greater">greater</option>
+									<option value="lesser">lesser</option>
+							</select></td>
+
+                            <td th:if="${question.questionTypeID == 1}"><input th:field="*{surveyDetails[__${iterator.index}__].compareValue}" type="number" /></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <div>
+                    Group Size <input th:field="*{groupSize}" type="number" />
+                </div>
+
+                <div>
+                    <p>
+                        <button type="submit">Submit</button>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+
+</html>

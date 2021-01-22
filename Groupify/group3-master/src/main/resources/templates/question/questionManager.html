@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <title>CSCI5308 - Group Formation Tool - Questions</title>
+
+    <!-- Normalize.css by Nicolas Gallagher, used from https://necolas.github.io/normalize.css/ 
+	Necessary to reset some default browser styles for consistent appearance across browsers. -->
+    <link th:href="@{/styles/cssandjs/normalize.css}" rel="stylesheet" />
+
+    <!-- This file includes all default styles for this application. -->
+    <link th:href="@{/styles/cssandjs/main.css}" rel="stylesheet" />
+    <style type="text/css">
+        table {
+            border: 1px solid black;
+            text-align: left;
+        }
+        
+        td {
+            border: 1px solid black;
+        }
+        
+        th {
+            border: 1px solid black;
+        }
+        
+        button {
+            width: max-content;
+        }
+        
+        a {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body class="bodyGridContainer">
+    <header class="bodyGridRow headerGridContainer">
+        <h1>CSCI5308 Group Formation Tool</h1>
+        <div class="bodyGridRow userProfileGridContainer" sec:authorize="isAuthenticated()">
+            <form th:action="@{/}">
+                <input type="submit" value="Home" />
+            </form>
+            <form class="userProfileGridCol4" th:action="@{/logout}" method="post">
+                <input type="submit" value="Sign Out" />
+            </form>
+        </div>
+    </header>
+    <main>
+        <aside class="mainGridRow welcomeInfoBox">
+            <h2>Question Manager</h2>
+        </aside>
+        <div class="welcomeInfoBox mainGridCentreCard">
+            <a th:href="@{/}"><button>Home</button></a> <a th:href="@{/questionCreate/{instructorID}(instructorID = ${instructorID})}"><button>Create
+					Question</button></a> <a th:href="@{/question/sortQuestion/{instructorID}/{sortFlag}(instructorID = ${instructorID}, sortFlag = 1 )}"><button>Sort
+					by Date</button></a> <a th:href="@{/question/sortQuestion/{instructorID}/{sortFlag}(instructorID = ${instructorID}, sortFlag = 2 )}"><button>Sort
+					by Title</button></a>
+        </div>
+        <br> <br>
+        <div style="margin-left: 10%">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Question ID</th>
+                        <th>Question Text</th>
+                        <th>Question Title</th>
+                        <th>Question Type ID</th>
+                        <th>Creation Date</th>
+                        <th>Instructor ID</th>
+                        <th>Delete Question</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${listOfQuestions.empty}">
+                        <td colspan="2">No questions Available</td>
+                    </tr>
+                    <tr th:each="question : ${listOfQuestions}">
+                        <td><a th:href="@{/question/loadQuestion/{questionID}(questionID = ${question.questionID})}"><span
+								th:text="${question.questionID}"> Question Id </span></a></td>
+                        <td><span th:text="${question.questionText}"> Question
+								Text </span></td>
+                        <td><span th:text="${question.questionTitle}">
+								Question Title </span></td>
+                        <td><span th:text="${question.questionTypeID}">
+								Question Type ID </span></td>
+                        <td><span th:text="${question.creationDate}"> Creation
+								Date </span></td>
+                        <td><span th:text="${question.instructorID}">
+								Instructor ID </span></td>
+                        <td><a th:href="@{/question/deleteQuestion/{instructorID}/{questionID}/{sortFlag}(questionID = ${question.questionID}, instructorID = ${question.instructorID}, sortFlag = 1 )}"><button>Delete
+									Question</button></a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+
+</html>

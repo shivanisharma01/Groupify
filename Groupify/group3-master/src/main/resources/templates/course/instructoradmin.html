@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <title>CSCI5308 - Group Formation Tool</title>
+    <link th:href="@{/styles/cssandjs/normalize.css}" rel="stylesheet" />
+    <link th:href="@{/styles/cssandjs/main.css}" rel="stylesheet" />
+</head>
+
+<body class="bodyGridContainer">
+    <header class="bodyGridRow headerGridContainer">
+        <h1>CSCI5308 Group Formation Tool</h1>
+        <div class="bodyGridRow userProfileGridContainer" sec:authorize="isAuthenticated()">
+            <form th:action="@{/}">
+                <input type="submit" value="Home" />
+            </form>
+            <form class="userProfileGridCol4" th:action="@{/logout}" method="post">
+                <input type="submit" value="Sign Out" />
+            </form>
+        </div>
+    </header>
+    <!-- I got the idea for how to do this from https://www.thymeleaf.org/doc/articles/springsecurity.html -->
+
+    <h1 th:text="'Course: ' + ${course.title}">Course: Title Not Found</h1>
+    <br />
+    <div th:if="${displayresults}">
+        <h3>Results of previous import:</h3>
+        <br />
+        <div th:if="${successful}">
+            <h4>Successful</h4>
+            <br />
+            <table>
+                <tr th:each="msg : ${successful}">
+                    <td><span th:text="${msg}"></span></td>
+                </tr>
+            </table>
+        </div>
+        <div th:if="${failures}">
+            <h4>Failures</h4>
+            <br />
+            <table>
+                <tr th:each="msg : ${failures}">
+                    <td><span th:text="${msg}"></span></td>
+                </tr>
+            </table>
+            <br />
+        </div>
+    </div>
+    <p>This tool allows you to import and enroll students in the system by uploading a CSV file (banner ID, first name, last name, email). Each student will have an account created if they do not already exist in the system, and will be emailed with their
+        login credentials.</p>
+    <form th:action="@{/course/uploadcsv(id=${course.id})}" method="post" enctype="multipart/form-data">
+        <label>File to upload:</label> <input type="file" name="file">
+        <button type="submit">Upload CSV File</button>
+    </form>
+    <br />
+    <a th:href="@{/course/enrollta(id=${course.id})}">Enroll TAs</a>
+    <br />
+    <br />
+    <p>This tool allows you to create and edit a survey</p>
+    <br />
+    <div th:if="${instructor}">
+        <div th:if="${!surveyExists}">
+            <a th:href="@{/createSurvey/{courseID}(courseID=${course.id})}">Create Survey</a>
+        </div>
+        <div th:if="${surveyExists}">
+            <div th:if="${!surveyPublished}">
+                <a th:href="@{/createSurvey/{courseID}(courseID=${course.id})}">Edit Survey</a>
+                <br />
+                <a th:href="@{/publishSurvey/{courseID}(courseID=${course.id})}">Publish Survey</a>
+            </div>
+            <div th:if="${surveyPublished}">
+                <p>Survey Published</p>
+                <a th:href="@{/viewSurvey/{courseID}(courseID=${course.id})}">View Survey</a>
+                <a th:href="@{/groupformation/algorithm(id=${course.id})}">Generate Groups</a>
+            </div>
+        </div>
+    </div>
+    <div th:if="${ta}">
+        <div th:if="${surveyExists}">
+            <div th:if="${!surveyPublished}">
+                <a th:href="@{/editSurvey/{courseID}(courseID=${course.id})}">Edit Survey</a>
+            </div>
+            <div th:if="${surveyPublished}">
+                <a th:href="@{/viewSurvey/{courseID}(courseID=${course.id})}">View Survey</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,55 @@
+image: java:8-jdk
+
+variables:
+    GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+    GIT_STRATEGY: clone
+    
+
+stages:
+ - build
+ - test
+ - deploy
+
+before_script:
+ - echo "Start CI/CD"
+ - export GRADLE_USER_HOME=`pwd`/.gradle
+ 
+ 
+cache:
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+
+build:
+  stage: build
+  script:
+    - chmod +x ./gradlew
+    - ./gradlew --build-cache assemble
+  artifacts:
+    paths:
+      - build/libs/*.jar
+  tags:
+    - dalfcs_gitlab_docker_ci
+
+test:
+  stage: test
+  script:
+    - chmod +x ./gradlew
+    - ./gradlew check
+  tags:
+    - dalfcs_gitlab_docker_ci
+    
+deploy:
+    stage: deploy
+    script:
+      - git remote add heroku https://heroku:$API_KEY@git.heroku.com/asdc-group3-test.git || true
+      - git push -fq heroku HEAD:master
+    only:
+      - Develop
+    tags:
+    - dalfcs_gitlab_docker_ci
+      
+     
+
+after_script:
+  - echo "End CI/CD"

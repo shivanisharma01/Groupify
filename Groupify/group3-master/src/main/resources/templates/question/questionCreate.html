@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <title>CSCI5308 - Group Formation Tool -Create Question</title>
+
+    <!-- Normalize.css by Nicolas Gallagher, used from https://necolas.github.io/normalize.css/ 
+	Necessary to reset some default browser styles for consistent appearance across browsers. -->
+    <link th:href="@{/styles/cssandjs/normalize.css}" rel="stylesheet" />
+
+    <!-- This file includes all default styles for this application. -->
+    <link th:href="@{/styles/cssandjs/main.css}" rel="stylesheet" />
+</head>
+
+<body class="bodyGridContainer">
+    <header class="bodyGridRow headerGridContainer">
+        <h1>CSCI5308 Group Formation Tool</h1>
+    </header>
+    <main class="bodyGridRow mainGridContainer">
+        <aside class="mainGridRow welcomeInfoBox">
+            <h2>Question Editor</h2>
+        </aside>
+        <div class="mainGridCentreCard">
+            <form th:action="@{/questionCreate/{instructorID}(instructorID = ${instructorID})}" th:object="${question}" method="post">
+                <label>Title: </label>
+                <input type="text" name="credits" th:field="*{questionTitle}" required><br>
+                <label>Question: </label>
+                <input type="text" name="question" th:field="*{questionText}" required><br>
+                <label>Type: </label>
+                <select id="myType" name="type" th:field="*{questionTypeID}" required>
+                    <option selected="selected" value="0">Select a value</option>
+                    <option value="1">Numeric</option>
+                    <option value="4">Free Text</option>
+                    <option value="2">Mutiple Choice - Choose One</option>
+                    <option value="3">Mutiple Choice - Choose Multiple</option>
+                </select>
+
+                <div>
+                    <a th:href="@{/question/{instructorID}/{sortFlag}(instructorID = ${instructorID}, sortFlag = 1 )}">Cancel</a>
+                    <input type="submit" value="Next" />
+                </div>
+            </form>
+        </div>
+    </main>
+
+
+</body>
+
+</html>

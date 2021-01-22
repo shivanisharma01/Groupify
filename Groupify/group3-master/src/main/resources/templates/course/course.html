@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <title>CSCI5308 - Group Formation Tool</title>
+
+    <link th:href="@{/styles/cssandjs/normalize.css}" rel="stylesheet" />
+    <link th:href="@{/styles/cssandjs/main.css}" rel="stylesheet" />
+
+</head>
+
+
+<body class="bodyGridContainer">
+    <header class="bodyGridRow headerGridContainer">
+        <h1>CSCI5308 Group Formation Tool</h1>
+        <div class="bodyGridRow userProfileGridContainer" sec:authorize="isAuthenticated()">
+            <form th:action="@{/}">
+                <input type="submit" value="Home" />
+            </form>
+            <form class="userProfileGridCol4" th:action="@{/logout}" method="post">
+                <input type="submit" value="Sign Out" />
+            </form>
+        </div>
+    </header>
+    <main class="bodyGridRow mainGridContainer">
+        <aside class="mainGridRow welcomeInfoBox">
+            <h2>Course</h2>
+        </aside>
+        <div class="mainGridCentreCard">
+            <h1 th:text="${course.title}">Title Not Found</h1>
+            <div th:if="${instructor} or ${ta}">
+                <br /> <a th:href="@{/course/instructoradmin(id=${course.id})}">Course
+					Administration</a> <br />
+            </div>
+            <div th:if="${student} and ${surveyExist}">
+                <b>Student Enrolled</b> <br> <a th:href="@{/survey/surveyResponse/{courseID}(courseID = ${course.id} )}">Survey</a>
+            </div>
+        </div>
+    </main>
+
+
+
+</body>
+
+</html>
